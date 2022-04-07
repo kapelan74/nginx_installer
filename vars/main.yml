@@ -1,0 +1,4 @@
+---
+# vars file for nginx_installer
+
+root_dir: "/usr/share/nginx/html"

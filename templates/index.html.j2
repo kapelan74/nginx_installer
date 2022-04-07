@@ -1,0 +1,5 @@
+<h2>Hello! Welcome to {{ hostvars[inventory_hostname]['ansible_nodename']}}</h2>
+------</br>
+IP: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}</br>
+OS: {{ hostvars[inventory_hostname]['ansible_distribution'] }}</br>
+OS_ver: {{ hostvars[inventory_hostname]['ansible_distribution_version'] }}

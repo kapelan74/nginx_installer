@@ -1,0 +1,70 @@
+---
+- name: Nginx install
+  tags: 
+  - install 
+  - configure
+  block:
+    - name: Check installed Nginx
+      package_facts:
+        manager: "auto"
+
+    - name: Nginx check result 
+      debug:
+        msg: "{{ ansible_facts.packages['nginx'][0].version }} version of Nginx are installed!" 
+      when: "'nginx' in ansible_facts.packages"
+
+- name: Nginx install
+  tags: install
+  block:
+    - name: Install EPEL Repo
+      package:
+        name: epel-release
+        state: present
+
+    - name: Install nginx package
+      package:
+        name: nginx
+        state: latest
+
+    - name: Allow HTTP port in firewalld
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+
+    - name: Reload firewalld
+      systemd:
+        name: firewalld
+        state: reloaded
+
+    - name: Start and Enabe nginx
+      systemd:
+        name: nginx
+        enabled: yes
+        state: started
+
+  when: "'nginx' not in ansible_facts.packages"
+
+- name: Nginx configure
+  tags: configure
+  block:
+    - name: Copy nginx.conf file
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+
+    - name: Copy index.html
+      template:
+        src: index.html.j2
+        dest: "{{ root_dir }}/index.html"
+
+    - name: Reload nginx
+      systemd:
+        name: nginx
+        state: reloaded
+
+  when: "'nginx' in ansible_facts.packages"
+
+
+
+
