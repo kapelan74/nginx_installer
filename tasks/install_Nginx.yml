@@ -24,7 +24,7 @@
     - name: Install nginx package
       package:
         name: nginx
-        state: latest
+        state: "{{ nginx_ver }}"
 
     - name: Allow HTTP port in firewalld
       firewalld:
